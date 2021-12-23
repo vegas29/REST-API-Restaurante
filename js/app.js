@@ -14,8 +14,12 @@ function guardarCliente(){
     //Revisar si hay campos vacios
     const camposVacios = [mesa, hora].some( campo => campo === '');
     if(camposVacios){
-        console.log('Si hay al menos un campo vacio');
-    }else{
-        console.log('Todos los campos estan llenos');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Todos los campos son obligatorios',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+        });
+        return;
     }
 }
