@@ -1,7 +1,7 @@
 let cliente = {
     mesa: '',
     hora: '',
-    platillos: []
+    pedido: []
 };
 
 const categorias = {
@@ -87,6 +87,13 @@ function mostrarPlatillos(platillos){
         input.id = `producto-${platillo.id}`;
         input.classList.add('form-control');
 
+        //Funcion que detecta la cantidad y el platillo que se esta agregando
+        input.onchange = function(){
+            const cantidad = parseInt(input.value);  
+            agregarPlatillo({...platillo, cantidad});
+        }
+
+
         const agregar = document.createElement('DIV');
         agregar.classList.add('col-md-2');
         agregar.appendChild(input);
@@ -98,4 +105,38 @@ function mostrarPlatillos(platillos){
 
         contenido.appendChild(row);
     })
+}
+
+function agregarPlatillo(producto){
+    //Destructuring del pedido actual
+    let { pedido } = cliente;
+    
+    //Revisar que la cantidad sea mayor a 0
+
+    if(producto.cantidad > 0){
+        //Comprueba si el elemento ya existe en el array
+        if(pedido.some(articulo => articulo.id === producto.id)){
+            //El articulo ya existe, actualizar la cantidad
+            const pedidoActualizado = pedido.map( articulo => {
+                if(articulo.id === producto.id){
+                    articulo.cantidad = producto.cantidad;
+                }
+                return articulo;
+            });
+
+            //Se asigna el nuevo array a cliente.pedido
+            cliente.pedido = [...pedidoActualizado];
+        }else{
+            //El articulo no existe, por ese motivo se agrega al arreglo de pedido
+            cliente.pedido = [...pedido, producto];
+        }
+        
+        
+    }else{
+        //Eliminar elementos cuando la cantidad es 0
+        const resultado = pedido.filter(articulo => articulo.id !== producto.id);
+        cliente.pedido = [...resultado];
+    }
+
+     console.log(cliente.pedido);
 }
